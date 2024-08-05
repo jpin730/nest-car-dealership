@@ -1,5 +1,7 @@
 # Nest Car Dealership
 
+<!-- TODO: Add project description -->
+
 ## Installation
 
 ```bash
