@@ -30,30 +30,26 @@ export class CarsService {
   create(createCarDto: CreateCarDto): ICar {
     const newCar = { id: crypto.randomUUID(), ...createCarDto };
 
-    this.cars.push(newCar);
+    this.cars = [...this.cars, newCar];
 
     return structuredClone(newCar);
   }
 
   update(id: UUID, updateCarDto: UpdateCarDto): ICar {
-    const index = this.cars.findIndex((car) => car.id === id);
+    const updatedCar = this.getById(id);
 
-    if (index === -1) {
-      throw new NotFoundException(`Car with id ${id} not found`);
-    }
+    Object.assign(updatedCar, updateCarDto);
 
-    this.cars[index] = { ...this.cars[index], ...updateCarDto };
+    this.cars = this.cars.map((car) => (car.id === id ? updatedCar : car));
 
-    return structuredClone(this.cars[index]);
+    return structuredClone(updatedCar);
   }
 
   delete(id: UUID): ICar {
-    const index = this.cars.findIndex((car) => car.id === id);
+    const deletedCar = this.getById(id);
 
-    if (index === -1) {
-      throw new NotFoundException(`Car with id ${id} not found`);
-    }
+    this.cars = this.cars.filter((car) => car.id !== id);
 
-    return this.cars.splice(index, 1).at(0) as ICar;
+    return structuredClone(deletedCar);
   }
 }
