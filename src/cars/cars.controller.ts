@@ -12,6 +12,8 @@ import {
 import { UUID } from 'crypto';
 
 import { CarsService } from './cars.service';
+import { CreateCarDto } from './dtos/create-car.dto';
+import { UpdateCarDto } from './dtos/update-car.dto';
 import { ICar } from './interfaces/car.interface';
 
 @Controller('cars')
@@ -30,16 +32,16 @@ export class CarsController {
 
   @Post()
   @HttpCode(201)
-  create(@Body() car: Omit<ICar, 'id'>): ICar {
-    return this.carsService.create(car);
+  create(@Body() createCarDto: CreateCarDto): ICar {
+    return this.carsService.create(createCarDto);
   }
 
   @Patch(':id')
   update(
     @Param('id', ParseUUIDPipe) id: UUID,
-    @Body() car: Partial<ICar>,
+    @Body() updateCarDto: UpdateCarDto,
   ): ICar {
-    return this.carsService.update(id, car);
+    return this.carsService.update(id, updateCarDto);
   }
 
   @Delete(':id')

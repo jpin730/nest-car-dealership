@@ -1,6 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UUID } from 'crypto';
 
+import { CreateCarDto } from './dtos/create-car.dto';
+import { UpdateCarDto } from './dtos/update-car.dto';
 import { ICar } from './interfaces/car.interface';
 
 @Injectable()
@@ -25,24 +27,22 @@ export class CarsService {
     return structuredClone(car);
   }
 
-  create(car: Omit<ICar, 'id'>): ICar {
-    const newCar = { id: crypto.randomUUID(), ...car };
+  create(createCarDto: CreateCarDto): ICar {
+    const newCar = { id: crypto.randomUUID(), ...createCarDto };
 
     this.cars.push(newCar);
 
     return structuredClone(newCar);
   }
 
-  update(id: UUID, car: Partial<ICar>): ICar {
+  update(id: UUID, updateCarDto: UpdateCarDto): ICar {
     const index = this.cars.findIndex((car) => car.id === id);
 
     if (index === -1) {
       throw new NotFoundException(`Car with id ${id} not found`);
     }
 
-    delete car.id;
-
-    this.cars[index] = { ...this.cars[index], ...car };
+    this.cars[index] = { ...this.cars[index], ...updateCarDto };
 
     return structuredClone(this.cars[index]);
   }
