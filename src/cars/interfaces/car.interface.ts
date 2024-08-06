@@ -1,5 +1,7 @@
+import { UUID } from 'crypto';
+
 export interface ICar {
-  id: number;
+  id: UUID;
   brand: string;
   model: string;
 }

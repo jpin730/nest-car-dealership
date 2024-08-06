@@ -5,18 +5,17 @@ import {
   Get,
   HttpCode,
   Param,
-  ParseIntPipe,
+  ParseUUIDPipe,
   Patch,
   Post,
 } from '@nestjs/common';
+import { UUID } from 'crypto';
 
-import { ICar } from './cars.interface';
 import { CarsService } from './cars.service';
+import { ICar } from './interfaces/car.interface';
 
 @Controller('cars')
 export class CarsController {
-  private cars = ['car1', 'car2', 'car3'];
-
   constructor(private readonly carsService: CarsService) {}
 
   @Get()
@@ -25,12 +24,11 @@ export class CarsController {
   }
 
   @Get(':id')
-  getById(@Param('id', ParseIntPipe) id: number): ICar {
+  getById(@Param('id', ParseUUIDPipe) id: UUID): ICar {
     return this.carsService.getById(id);
   }
 
   @Post()
-  // change response code
   @HttpCode(201)
   create(@Body() car: Omit<ICar, 'id'>): ICar {
     return this.carsService.create(car);
@@ -38,14 +36,14 @@ export class CarsController {
 
   @Patch(':id')
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: UUID,
     @Body() car: Partial<ICar>,
   ): ICar {
     return this.carsService.update(id, car);
   }
 
   @Delete(':id')
-  delete(@Param('id', ParseIntPipe) id: number): void {
-    this.carsService.delete(id);
+  delete(@Param('id', ParseUUIDPipe) id: UUID): ICar {
+    return this.carsService.delete(id);
   }
 }
